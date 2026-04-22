@@ -4,7 +4,7 @@ import { useAuth } from '../../hooks/useAuth'
 
 const LoginPage = () => {
 
-  let { showPassword, setShowPassword, handleLoginSubmit, handleSubmit, register } = useAuth()
+  let { showPassword, setShowPassword, handleLoginSubmit, handleSubmit, register, errors } = useAuth()
 
   return (
     <div className="min-h-screen bg-black flex items-center justify-center px-4">
@@ -33,12 +33,12 @@ const LoginPage = () => {
                 Email or username
               </label>
               <input
-                {...register('email')}
+                {...register('email', {required: 'Email is requiered'})}
                 type="email"
                 placeholder="Email or username"
                 className="w-full bg-[#2a2a2a] text-white placeholder-gray-500 rounded-md px-4 py-3 text-sm outline-none border border-transparent focus:border-white transition-colors duration-200"
-                required
               />
+              {/* {errors?.email && <p>{errors.email}</p>} */}
             </div>
 
             {/* Password */}
@@ -52,7 +52,6 @@ const LoginPage = () => {
                   type={showPassword ? 'text' : 'password'}
                   placeholder="Password"
                   className="w-full bg-[#2a2a2a] text-white placeholder-gray-500 rounded-md px-4 py-3 text-sm outline-none border border-transparent focus:border-white transition-colors duration-200 pr-12"
-                  required
                 />
                 {/* Show/Hide Password */}
                 <button

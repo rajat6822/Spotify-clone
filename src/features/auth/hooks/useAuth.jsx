@@ -24,6 +24,7 @@ export const useAuth = () => {
 
 
     let { reset, handleSubmit, register, formState: { errors } } = useForm()
+    console.log(errors)
 
     const handleLoginSubmit = (data) => {
         if (data.email && data.password) {
@@ -35,7 +36,8 @@ export const useAuth = () => {
                 }
             })
         }
-        reset()
+        console.log(errors)
+        // reset()
     }
 
     const handleRegisterSubmit = (data) => {
@@ -57,6 +59,7 @@ export const useAuth = () => {
         register,
         handleSubmit,
         isAuthenticated,
-        deleteLoginUser
+        deleteLoginUser,
+        errors
     }
 }
