@@ -1,0 +1,56 @@
+import React, { useEffect } from 'react'
+import { createBrowserRouter, RouterProvider } from 'react-router'
+import AuthLayout from '../layouts/Authlayout'
+import LoginPage from '../../features/auth/ui/pages/Loginpage'
+import RegisterPage from '../../features/auth/ui/pages/RegisterPage'
+import DashboardLayout from '../layouts/DashboardLayout'
+import HomePage from '../../features/dashboard/ui/pages/HomePage'
+import ProtectedRoute from './ProtectedRoute'
+import PublicRoute from './PublicRoute'
+import { useDispatch } from 'react-redux'
+
+const AppRoutes = () => {
+
+    let router = createBrowserRouter([
+        {
+            path: '/',
+            element: <PublicRoute />,
+            children: [
+                {
+                    path: '',
+                    element: <AuthLayout />,
+                    children: [
+                        {
+                            path: '',
+                            element: <LoginPage />
+                        },
+                        {
+                            path: 'register',
+                            element: <RegisterPage />
+                        },
+                    ]
+                }
+            ]
+        },
+        {
+            path: '/dashboard',
+            element: <ProtectedRoute />,
+            children: [
+                {
+                    path: '',
+                    element: <DashboardLayout />,
+                    children: [
+                        {
+                            path: '',
+                            element: <HomePage />,
+                        },
+                    ]
+                }
+            ]
+        }
+    ])
+
+    return <RouterProvider router={router} />
+}
+
+export default AppRoutes
