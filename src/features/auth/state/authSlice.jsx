@@ -6,7 +6,11 @@ let authSlice = createSlice({
     initialState: {
         loginUser: JSON.parse(localStorage.getItem('log user') || 'null'),
         registerUser: JSON.parse(localStorage.getItem('reg users')),
-        invalidEmailOrPassword: false
+        invalidEmailOrPassword: false,
+        loginData: {
+            email: null,
+            password: null
+        }
     },
     reducers: {
         addLoginUser: (state, action) => {
@@ -18,6 +22,8 @@ let authSlice = createSlice({
                         localStorage.setItem('log user', JSON.stringify(elem))
                     } else {
                         state.invalidEmailOrPassword = true
+                        state.loginData.email = action.payload.email
+                        state.loginData.password = action.payload.password
                     }
                 })
             }
@@ -36,4 +42,4 @@ let authSlice = createSlice({
 })
 
 export default authSlice.reducer
-export const { addLoginUser, addRegisterUser, removeLoginUser } = authSlice.actions
+export const { addLoginUser, addRegisterUser, removeLoginUser, loginData } = authSlice.actions

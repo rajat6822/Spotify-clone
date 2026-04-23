@@ -4,7 +4,18 @@ import { useAuth } from '../../hooks/useAuth'
 
 const LoginPage = () => {
 
-  let { showPassword, setShowPassword, handleLoginSubmit, handleSubmit, register, errors, invalidEmailOrPassword } = useAuth()
+  let {
+    showPassword,
+    setShowPassword,
+    handleLoginSubmit,
+    handleSubmit,
+    register,
+    errors,
+    invalidEmailOrPassword,
+    loginData
+  } = useAuth()
+  console.log(loginData)
+
 
   return (
     <div className="min-h-screen bg-black flex items-center justify-center px-4">
@@ -43,6 +54,9 @@ const LoginPage = () => {
               <input
                 {...register('email', { required: 'Enter you email' })}
                 type="email"
+                value={
+                  
+                }
                 placeholder="Email or username"
                 className="w-full bg-[#2a2a2a] text-white placeholder-gray-500 rounded-md px-4 py-3 text-sm outline-none border border-transparent focus:border-white transition-colors duration-200"
               />
@@ -67,6 +81,10 @@ const LoginPage = () => {
                       message: 'Max 10 characters are allowed'
                     }
                   })}
+                  value={
+                  loginData.password? `${loginData.password}`:
+                  ''
+                }
                   type={showPassword ? 'text' : 'password'}
                   placeholder="Password"
                   className="w-full bg-[#2a2a2a] text-white placeholder-gray-500 rounded-md px-4 py-3 text-sm outline-none border border-transparent focus:border-white transition-colors duration-200 pr-12"
