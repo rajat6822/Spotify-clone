@@ -4,7 +4,7 @@ import { useAuth } from '../../hooks/useAuth'
 
 const LoginPage = () => {
 
-  let { showPassword, setShowPassword, handleLoginSubmit, handleSubmit, register, errors } = useAuth()
+  let { showPassword, setShowPassword, handleLoginSubmit, handleSubmit, register, errors, invalidEmailOrPassword } = useAuth()
 
   return (
     <div className="min-h-screen bg-black flex items-center justify-center px-4">
@@ -25,6 +25,14 @@ const LoginPage = () => {
             Log in to Spotify
           </h1>
 
+          {
+            invalidEmailOrPassword ?
+              <div className='border border-red-700 p-2 mb-6 rounded-xl cursor-pointer'>
+                <h1 className='text-center text-red-700'>Invalid ( Email or Password )</h1>
+              </div> :
+              ''
+          }
+
           <form onSubmit={handleSubmit(handleLoginSubmit)} className="space-y-4">
 
             {/* Email */}
@@ -33,12 +41,12 @@ const LoginPage = () => {
                 Email or username
               </label>
               <input
-                {...register('email', {required: 'Email is requiered'})}
+                {...register('email', { required: 'Enter you email' })}
                 type="email"
                 placeholder="Email or username"
                 className="w-full bg-[#2a2a2a] text-white placeholder-gray-500 rounded-md px-4 py-3 text-sm outline-none border border-transparent focus:border-white transition-colors duration-200"
               />
-              {/* {errors?.email && <p>{errors.email}</p>} */}
+              {errors.email && <p className='text-red-600 text-[12px]'>{errors.email.message}</p>}
             </div>
 
             {/* Password */}
@@ -48,11 +56,23 @@ const LoginPage = () => {
               </label>
               <div className="relative">
                 <input
-                  {...register('password')}
+                  {...register('password', {
+                    required: 'Password is requiered',
+                    minLength: {
+                      value: 6,
+                      message: 'Min 6 characters are requiered'
+                    },
+                    maxLength: {
+                      value: 10,
+                      message: 'Max 10 characters are allowed'
+                    }
+                  })}
                   type={showPassword ? 'text' : 'password'}
                   placeholder="Password"
                   className="w-full bg-[#2a2a2a] text-white placeholder-gray-500 rounded-md px-4 py-3 text-sm outline-none border border-transparent focus:border-white transition-colors duration-200 pr-12"
                 />
+                {errors.password && <p className='text-red-600 text-[12px]  '>{errors.password.message}</p>}
+
                 {/* Show/Hide Password */}
                 <button
                   type="button"

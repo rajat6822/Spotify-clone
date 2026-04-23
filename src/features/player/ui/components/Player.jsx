@@ -5,7 +5,7 @@ import { useSelector } from 'react-redux'
 const Player = () => {
 
   let { togglePlayAndPause } = usePlayer()
-  let { isPlaying } = useSelector((store) => store.player)
+  let { isPlaying, currentPlayingSong } = useSelector((store) => store.player)
 
 
 
@@ -17,14 +17,31 @@ const Player = () => {
         <div className="flex items-center gap-3 w-64">
           {/* Album Art */}
           <div className="w-14 h-14 bg-[#2a2a2a] rounded-md flex-shrink-0 flex items-center justify-center">
-            <svg viewBox="0 0 24 24" className="w-7 h-7 fill-[#535353]">
-              <path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z" />
-            </svg>
+            {
+              currentPlayingSong ?
+                <img src={ currentPlayingSong.thumbnail } alt="" /> :
+                <svg viewBox="0 0 24 24" className="w-7 h-7 fill-[#535353]">
+                  <path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z" />
+                </svg>
+            }
           </div>
+
           {/* Title & Artist */}
           <div className="min-w-0">
-            <p className="text-white text-sm font-semibold truncate">Song Title</p>
-            <p className="text-gray-400 text-xs truncate">Artist Name</p>
+            <p className="text-white text-sm font-semibold truncate">
+              {
+                currentPlayingSong?
+                currentPlayingSong.title:
+                'Song Name'
+              }
+            </p>
+            <p className="text-gray-400 text-xs truncate">
+              {
+                currentPlayingSong?
+                currentPlayingSong.artist:
+                'Artist Name'
+              }
+            </p>
           </div>
         </div>
 
@@ -52,12 +69,12 @@ const Player = () => {
             <button onClick={() => togglePlayAndPause()}
               className="bg-white hover:scale-105 text-black rounded-full w-10 h-10 flex items-center justify-center transition-all">
               {!isPlaying ?
-                  (<svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                    <path d="M8 5v14l11-7z" />
-                  </svg>) :
-                  (<svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                    <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z" />
-                  </svg>)
+                (<svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M8 5v14l11-7z" />
+                </svg>) :
+                (<svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z" />
+                </svg>)
               }
             </button>
 

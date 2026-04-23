@@ -1,53 +1,52 @@
 import { useEffect, useState } from "react"
 import { get, useForm } from "react-hook-form"
-import { useDispatch } from "react-redux"
+import { useDispatch, useSelector } from "react-redux"
 import { useNavigate } from "react-router"
+import { addLoginUser, addRegisterUser, removeLoginUser } from "../state/authSlice"
 
 export const useAuth = () => {
 
     let navigate = useNavigate()
+    let dispatch = useDispatch()
+    let { loginUser, registerUser, invalidEmailOrPassword } = useSelector(state => state.auth)
+
+    let { reset, handleSubmit, register, formState: { errors } } = useForm({
+        mode: 'onChange'
+    })
 
     if (localStorage.getItem('reg users') === null) {
         localStorage.setItem('reg users', '[]')
     } else if (localStorage.getItem('log user') === null) {
         localStorage.setItem('log user', '{}')
     }
-    const [loginUser, setLoginUser] = useState(JSON.parse(localStorage.getItem('log user') || 'null'))
-    const [registerUser, setRegisterUser] = useState(JSON.parse(localStorage.getItem('reg users')))
-    const [showPassword, setShowPassword] = useState(false) 
     
+    const [showPassword, setShowPassword] = useState(false)
+
     const storedUser = JSON.parse(localStorage.getItem('log user'))
 
     const [isAuthenticated, setIsAuthenticated] = useState(
         storedUser && storedUser.email && storedUser.password ? true : false
-    )  
+    )
 
 
-    let { reset, handleSubmit, register, formState: { errors } } = useForm()
-    console.log(errors)
+
+
 
     const handleLoginSubmit = (data) => {
-        if (data.email && data.password) {
-            registerUser.find((elem) => {
-                if (elem.email === data.email && elem.password === data.password) {
-                    localStorage.setItem('log user', JSON.stringify(elem))
-                    setLoginUser(elem)
-                    navigate('/dashboard')
-                }
-            })
+        dispatch(addLoginUser(data))
+        navigate('/dashboard')
+        if(invalidEmailOrPassword){
+            reset()
         }
-        console.log(errors)
-        // reset()
     }
 
     const handleRegisterSubmit = (data) => {
-        setRegisterUser(prev => [...prev, data])
-        localStorage.setItem('reg users', JSON.stringify([...registerUser, data]))
+        dispatch(addRegisterUser(data))
         reset()
     }
 
     const deleteLoginUser = () => {
-        localStorage.removeItem('log user')
+        dispatch(removeLoginUser())
         navigate('/')
     }
 
@@ -58,8 +57,9 @@ export const useAuth = () => {
         handleRegisterSubmit,
         register,
         handleSubmit,
-        isAuthenticated,
         deleteLoginUser,
-        errors
+        isAuthenticated,
+        errors,
+        invalidEmailOrPassword
     }
 }

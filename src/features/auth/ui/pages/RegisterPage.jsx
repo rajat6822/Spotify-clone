@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { useAuth } from '../../hooks/useAuth'
 
 const RegisterPage = () => {
-  let { showPassword, setShowPassword, handleRegisterSubmit, handleSubmit, register } = useAuth()
+  let { showPassword, setShowPassword, handleRegisterSubmit, handleSubmit, register, errors } = useAuth()
 
   return (
     <div className="min-h-screen bg-black flex items-center justify-center px-4">
@@ -31,12 +31,13 @@ const RegisterPage = () => {
                 Full Name
               </label>
               <input
-                {...register('name')}
+                {...register('name', {required: 'Name is requiered'})}
                 type="text"
                 placeholder="Your full name"
                 className="w-full bg-[#2a2a2a] text-white placeholder-gray-500 rounded-md px-4 py-3 text-sm outline-none border border-transparent focus:border-white transition-colors duration-200"
-                required
               />
+              {errors.name && <p className='text-red-600 text-[12px]'>{errors.name.message}</p>}
+
             </div>
 
             {/* Email */}
@@ -45,12 +46,12 @@ const RegisterPage = () => {
                 Email
               </label>
               <input
-                {...register('email')}
+                {...register('email', {required: 'Enter you email'})}
                 type="email"
-                placeholder="Your email address"
+                placeholder="Email or username"
                 className="w-full bg-[#2a2a2a] text-white placeholder-gray-500 rounded-md px-4 py-3 text-sm outline-none border border-transparent focus:border-white transition-colors duration-200"
-                required
               />
+              {errors.email && <p className='text-red-600 text-[12px]'>{errors.email.message}</p>}
             </div>
 
             {/* Password */}
@@ -60,12 +61,23 @@ const RegisterPage = () => {
               </label>
               <div className="relative">
                 <input
-                  {...register('password')}
+                  {...register('password', {
+                    required: 'Password is requiered',
+                    minLength: {
+                      value: 6,
+                      message: 'Min 6 characters are requiered'
+                    },
+                    maxLength: {
+                      value: 10,
+                      message: 'Max 10 characters are allowed'
+                    }
+                  })}
                   type={showPassword ? 'text' : 'password'}
-                  placeholder="Create a password"
+                  placeholder="Password"
                   className="w-full bg-[#2a2a2a] text-white placeholder-gray-500 rounded-md px-4 py-3 text-sm outline-none border border-transparent focus:border-white transition-colors duration-200 pr-12"
-                  required
                 />
+                {errors.password && <p className='text-red-600 text-[12px]'>{errors.password.message}</p>}
+
                 {/* Show/Hide Password */}
                 <button
                   type="button"
