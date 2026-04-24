@@ -1,13 +1,24 @@
 import React from "react";
 import { useDashboard } from "../../hooks/useDashboard";
-import { play, playNewSong } from "../../../player/state/playerSlice";
+import { play, playNewSong, setSongs } from "../../../player/state/playerSlice";
+import { useSelector } from "react-redux";
 
-const SongCard = ({ song }) => {
+const SongCard = ({ song, idx }) => {
 
     let { dispatch } = useDashboard()
+
+    let {songs, searchValue, searchedSongs} = useSelector(state => state.search)
+
+    let handlePlay = () => {
+        let currentSongList = searchValue? searchedSongs : songs
+        dispatch(setSongs(currentSongList))
+        dispatch(playNewSong({song: song, index: idx}))
+        console.log('Song data:', song)
+        console.log('Song URL:', song.url)
+    }
     
   return (
-    <div onClick={() => dispatch(playNewSong(song))}
+    <div onClick={handlePlay}
     className="w-64 bg-[#181818] p-4 rounded-lg hover:bg-[#282828] transition cursor-pointer group">
       
       {/* Thumbnail */}
@@ -33,6 +44,7 @@ const SongCard = ({ song }) => {
         {song.album} • {song.year}
       </p>
     </div>
+
   );
 };
 

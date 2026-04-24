@@ -8,10 +8,10 @@ const HomePage = () => {
     <div className='flex flex-wrap justify-center gap-4'>{
       searchValue ?
         searchedSongs.map((song, idx) => {
-          return <SongCard key={idx} song={song} />
+          return <SongCard key={idx} song={song} idx={idx}/>
         }) :
         songs.map((song, idx) => {
-          return <SongCard key={idx} song={song} />
+          return <SongCard key={idx} song={song} idx={idx}/>
         })
     }</div>
   )

@@ -1,4 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { act } from "react";
 import { useNavigate } from "react-router";
 
 let authSlice = createSlice({
@@ -7,25 +8,23 @@ let authSlice = createSlice({
         loginUser: JSON.parse(localStorage.getItem('log user') || 'null'),
         registerUser: JSON.parse(localStorage.getItem('reg users')),
         invalidEmailOrPassword: false,
-        loginData: {
-            email: null,
-            password: null
-        }
     },
     reducers: {
         addLoginUser: (state, action) => {
             if (action.payload.email && action.payload.password) {
-                state.registerUser?.find(elem => {
-                    if (elem.email === action.payload.email && elem.password === action.payload.password) {
-                        localStorage.setItem('log user', JSON.stringify(elem))
-                        state.loginUser = elem
-                        localStorage.setItem('log user', JSON.stringify(elem))
-                    } else {
-                        state.invalidEmailOrPassword = true
-                        state.loginData.email = action.payload.email
-                        state.loginData.password = action.payload.password
+                const matchedUser = state.registerUser.find((elem) => {
+                    if (elem.email === action.payload.email &&
+                        elem.password === action.payload.password) {
+                        return elem
                     }
                 })
+                if (matchedUser) {
+                    localStorage.setItem('log user', JSON.stringify(matchedUser))
+                    state.loginUser = matchedUser
+                    state.invalidEmailOrPassword = false
+                } else {
+                    state.invalidEmailOrPassword = true
+                }
             }
         },
         addRegisterUser: (state, action) => {

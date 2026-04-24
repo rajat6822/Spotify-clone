@@ -8,7 +8,7 @@ export const useAuth = () => {
 
     let navigate = useNavigate()
     let dispatch = useDispatch()
-    let { loginUser, registerUser, invalidEmailOrPassword, loginData } = useSelector(state => state.auth)
+    let { loginUser, registerUser, invalidEmailOrPassword } = useSelector(state => state.auth)
 
     let { reset, handleSubmit, register, formState: { errors } } = useForm({
         mode: 'onChange'
@@ -30,8 +30,13 @@ export const useAuth = () => {
 
     const handleLoginSubmit = (data) => {
         dispatch(addLoginUser(data))
-        navigate('/dashboard')
-        reset()
+        
+        const storedUser = JSON.parse(localStorage.getItem('log user'))
+        
+        if(storedUser && storedUser.email && storedUser.password){
+            reset()
+            navigate('/dashboard')
+        }
     }
 
     const handleRegisterSubmit = (data) => {
@@ -55,6 +60,5 @@ export const useAuth = () => {
         isAuthenticated,
         errors,
         invalidEmailOrPassword,
-        loginData
     }
 }

@@ -11,7 +11,7 @@ const searchSlice = createSlice({
     name : "search",
     initialState ,
     reducers : {
-        setSongs : (state , action) => {
+        setAllSongs : (state , action) => {
             state.songs = action.payload
             state.searchedSongs = action.payload
         },
@@ -32,5 +32,5 @@ const searchSlice = createSlice({
     }
 })
 
-export const { setSongs , setSearchValue} = searchSlice.actions 
+export const { setAllSongs , setSearchValue} = searchSlice.actions 
 export default searchSlice.reducer

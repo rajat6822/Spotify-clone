@@ -1,6 +1,6 @@
 import { useEffect, useRef } from "react"
 import { useDispatch, useSelector } from "react-redux"
-import { pause, play } from "../state/playerSlice"
+import { nextSong, pause, play, prevSong } from "../state/playerSlice"
 
 export let usePlayer = () => {
 
@@ -8,7 +8,7 @@ export let usePlayer = () => {
 
     let audioRef = useRef(new Audio())
 
-    let  {currentPlayingSong, isPlaying} = useSelector((store) => store.player)
+    let  {currentPlayingSong, isPlaying, autoPlay, autoRepeat} = useSelector((store) => store.player)
 
     useEffect(() => {
 
@@ -30,6 +30,28 @@ export let usePlayer = () => {
         }
     },[isPlaying])
 
+    useEffect(() => {
+
+        let audio = audioRef.current
+
+        let handleSongEnd = () => {
+            if(autoRepeat){
+                audio.currentTime = 0
+            }
+            else if(autoPlay){
+                dispatch(nextSong())
+            }
+            else{
+                dispatch(pause())
+            }
+        }
+
+        audio.addEventListener('ended', handleSongEnd)
+
+        return () => audio.removeEventListener('ended', handleSongEnd)
+
+    },[autoPlay, autoRepeat])
+
     let togglePlayAndPause = () =>{
         if(isPlaying){
             dispatch(pause())
@@ -40,6 +62,7 @@ export let usePlayer = () => {
 
     return {
         togglePlayAndPause,
+        dispatch
     }
      
 } 
