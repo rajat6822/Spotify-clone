@@ -3,6 +3,7 @@ import Navbar from '../../features/dashboard/ui/components/Navbar'
 import { Group, Panel } from 'react-resizable-panels'
 import { Outlet } from 'react-router'
 import PLayer from '../../features/player/ui/components/Player'
+import SideBar from '../../features/dashboard/ui/pages/SideBar'
 
 const DashboardLayout = () => {
     return (
@@ -15,7 +16,9 @@ const DashboardLayout = () => {
                     <Panel 
                     maxSize={'20%'}
                     minSize={'15%'}
-                    className='bg-[#121212] p-5'>Left side</Panel>
+                    className='bg-[#121212] p-5 '>
+                        <SideBar />
+                    </Panel>
 
                     <Panel className='bg-black p-5'>
                         <Outlet />

@@ -30,7 +30,6 @@ let authSlice = createSlice({
         addRegisterUser: (state, action) => {
             state.registerUser = [...JSON.parse(localStorage.getItem('reg users')), action.payload]
             localStorage.setItem('reg users', JSON.stringify(state.registerUser))
-            console.log(state.registerUser)
         },
         removeLoginUser: (state) => {
             localStorage.removeItem('log user')

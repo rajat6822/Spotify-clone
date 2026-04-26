@@ -1,13 +1,15 @@
 import { useEffect, useState } from "react"
 import { get, useForm } from "react-hook-form"
 import { useDispatch, useSelector } from "react-redux"
-import { useNavigate } from "react-router"
+import { useLocation, useNavigate } from "react-router"
 import { addLoginUser, addRegisterUser, removeLoginUser } from "../state/authSlice"
+import { setSearchValue } from "../../dashboard/state/searchSlice"
 
 export const useAuth = () => {
 
     let navigate = useNavigate()
     let dispatch = useDispatch()
+    let location = useLocation()
     let { loginUser, registerUser, invalidEmailOrPassword } = useSelector(state => state.auth)
 
     let { reset, handleSubmit, register, formState: { errors } } = useForm({
@@ -28,6 +30,11 @@ export const useAuth = () => {
         storedUser && storedUser.email && storedUser.password ? true : false
     )
 
+    const handleNavigate = (path) => {
+        dispatch(setSearchValue(''))
+        navigate(path)
+    }
+
     const handleLoginSubmit = (data) => {
         dispatch(addLoginUser(data))
         
@@ -37,10 +44,13 @@ export const useAuth = () => {
             reset()
             navigate('/dashboard')
         }
+
+
     }
 
     const handleRegisterSubmit = (data) => {
         dispatch(addRegisterUser(data))
+        navigate('/')
         reset()
     }
 
@@ -60,5 +70,9 @@ export const useAuth = () => {
         isAuthenticated,
         errors,
         invalidEmailOrPassword,
+        loginUser,
+        navigate,
+        location, 
+        handleNavigate
     }
 }

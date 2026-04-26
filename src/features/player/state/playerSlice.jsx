@@ -12,12 +12,14 @@ const playerSlice = createSlice({
         currentIndex: 0,
         autoRepeat: false,
         autoPlay: false,
+        currentTime: 0,
+        totalDuration: 0
     },
     reducers: {
         playNewSong: (state, action) => {
-            state.currentPlayingSong = action.payload
+            state.currentPlayingSong = action.payload.song
+            state.currentIndex = action.payload.index
             state.isPlaying = true
-            console.log(state.currentPlayingSong)
         },
         play: (state) => {
             state.isPlaying = true
@@ -29,20 +31,38 @@ const playerSlice = createSlice({
             state.songs = action.payload
         },
         nextSong: (state) => {
-            state.currentIndex = state.currentIndex + 1
-            state.currentPlayingSong = state.songs[state.currentIndex]
-            state.isPlaying = true
+            if(state.currentIndex == state.songs.length - 1){
+                state.currentIndex = 0
+                state.currentPlayingSong = state.songs[state.currentIndex]
+                state.isPlaying = true
+            }else{
+                state.currentIndex = state.currentIndex + 1
+                state.currentPlayingSong = state.songs[state.currentIndex]
+                state.isPlaying = true
+            }
         },
         prevSong: (state) => {
-            state.currentIndex = state.currentIndex - 1
-            state.currentPlayingSong = state.songs[state.currentIndex]
-            state.isPlaying = true
+            if(state.currentIndex == 0){
+                state.currentIndex = state.songs.length - 1
+                state.currentPlayingSong = state.songs[state.currentIndex]
+                state.isPlaying = true
+            }else{
+                state.currentIndex = state.currentIndex - 1
+                state.currentPlayingSong = state.songs[state.currentIndex]
+                state.isPlaying = true
+            }
         },
         setAutoRepeat: (state) => {
             state.autoRepeat = !state.autoRepeat
         },
         setAutoPlay: (state) => {
-            state.autoPlayplay = !state.autoPlay
+            state.autoPlay = !state.autoPlay
+        },
+        setCurrentTime: (state, action) => {
+            state.currentTime = action.payload
+        },
+        setTotalDuration: (state, action) => {
+            state.totalDuration = action.payload
         }
     }
 })
@@ -56,5 +76,7 @@ export let {
     nextSong,
     prevSong,
     setAutoRepeat,
-    setAutoReplay
+    setAutoPlay,
+    setCurrentTime,
+    setTotalDuration
 } = playerSlice.actions

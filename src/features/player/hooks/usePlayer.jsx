@@ -1,68 +1,103 @@
-import { useEffect, useRef } from "react"
+import { useEffect, useRef, useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
-import { nextSong, pause, play, prevSong } from "../state/playerSlice"
+import { nextSong, pause, play, playNewSong, prevSong, setAutoPlay, setAutoRepeat, setCurrentTime, setSongs, setTotalDuration } from "../state/playerSlice"
+import { useLocation } from "react-router"
+import { setFavSearchValue, setSearchValue } from "../../dashboard/state/searchSlice"
+
+const audioRef = new Audio()
 
 export let usePlayer = () => {
 
+    let location = useLocation()
     let dispatch = useDispatch()
 
-    let audioRef = useRef(new Audio())
+    let { currentPlayingSong, isPlaying, autoPlay, autoRepeat, currentTime, totalDuration} = useSelector((store) => store.player)
+    let { songs, searchValue, searchedSongs, favSearchedSongs } = useSelector(state => state.search)
+    let { favSongs } = useSelector(state => state.favSong)
 
-    let  {currentPlayingSong, isPlaying, autoPlay, autoRepeat} = useSelector((store) => store.player)
+    const formatTime = (sec) => {
+        if (!sec) return '0:00'
+        const m = Math.floor(sec / 60)
+        const s = Math.floor(sec % 60)
+        return `${m}:${s.toString().padStart(2, '0')}`
+    }
+    const handleSongProgress = (e) => {
+        audioRef.currentTime = e.target.value
+        setCurrentTime(Number(e.target.value))
+    }
 
-    useEffect(() => {
+    const handleSearch = (e) => {
+        let value = e.target.value
 
-        if(!currentPlayingSong) return
-
-        audioRef.current.src = currentPlayingSong.url
-        audioRef.current.play()
-
-    },[currentPlayingSong])
-
-    useEffect(() => {
-
-        if(!currentPlayingSong) return
-
-        if(isPlaying){
-            audioRef.current.play()
+        if(location.pathname === '/dashboard/favouriteSongs'){
+            dispatch(setFavSearchValue({value, favSongs}))
         }else{
-            audioRef.current.pause()
+            dispatch(setSearchValue(value))
         }
-    },[isPlaying])
+
+    }
 
     useEffect(() => {
 
-        let audio = audioRef.current
+        if (!currentPlayingSong) return
+
+        audioRef.src = currentPlayingSong.url
+        audioRef.load()
+
+        audioRef.ondurationchange = () => {
+            dispatch(setTotalDuration(audioRef.duration))
+        }
+        audioRef.ontimeupdate = () => {
+            dispatch(setCurrentTime(audioRef.currentTime))
+        }
+
+        audioRef.play().catch(err => {
+            if(err.name === 'AbortError') return
+            console.error(err)
+        })
+
+
+    }, [currentPlayingSong])
+
+    useEffect(() => {
 
         let handleSongEnd = () => {
-            if(autoRepeat){
-                audio.currentTime = 0
+            if (autoRepeat) {
+                audioRef.currentTime = 0
+                audioRef.play()
             }
-            else if(autoPlay){
+            else if (autoPlay) {
                 dispatch(nextSong())
             }
-            else{
+            else {
                 dispatch(pause())
             }
         }
 
-        audio.addEventListener('ended', handleSongEnd)
+        audioRef.addEventListener('ended', handleSongEnd)
 
-        return () => audio.removeEventListener('ended', handleSongEnd)
+        return () => audioRef.removeEventListener('ended', handleSongEnd)
 
-    },[autoPlay, autoRepeat])
+    }, [autoPlay, autoRepeat])
 
-    let togglePlayAndPause = () =>{
-        if(isPlaying){
+    let togglePlayAndPause = () => {
+        if (isPlaying) {
             dispatch(pause())
-        }else{
+            audioRef.pause()
+        } else {
             dispatch(play())
+            audioRef.play()
         }
     }
 
     return {
         togglePlayAndPause,
-        dispatch
+        dispatch,
+        totalDuration,
+        currentTime,
+        formatTime,
+        handleSongProgress,
+        handleSearch,
     }
-     
+
 } 
