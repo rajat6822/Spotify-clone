@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react'
 import { createBrowserRouter, RouterProvider } from 'react-router'
 import AuthLayout from '../layouts/AuthLayout'
-import LoginPage from '../../features/auth/ui/pages/Loginpage'
+import LoginPage from '../../features/auth/ui/pages/LoginPage'
 import RegisterPage from '../../features/auth/ui/pages/RegisterPage'
 import DashboardLayout from '../layouts/DashboardLayout'
 import HomePage from '../../features/dashboard/ui/pages/HomePage'
