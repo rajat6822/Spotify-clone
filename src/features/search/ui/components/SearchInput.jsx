@@ -9,12 +9,12 @@ const SearchInput = ({...props}) => {
   const { searchValue } = useSelector(state => state.search)
 
   return (
-    <div className='w-50'>
-        <input 
-        value={searchValue}
-        onChange={handleSearch}
-        className='w-[400px] border-gray-600 border rounded-xl p-2 bg-white text-black' {...props} />
-    </div>
+   <input
+      value={searchValue}
+      onChange={handleSearch}
+      className='bg-transparent outline-none text-white placeholder-gray-400 text-sm w-full'
+      {...props}
+    />
   )
 }
 

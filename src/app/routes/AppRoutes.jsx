@@ -9,6 +9,7 @@ import ProtectedRoute from './ProtectedRoute'
 import PublicRoute from './PublicRoute'
 import { useDispatch } from 'react-redux'
 import FavouriteSongsPage from '../../features/dashboard/ui/pages/FavouriteSongsPage'
+import HoneySinghSongPage from '../../features/dashboard/ui/pages/honeySinghSongPage'
 
 const AppRoutes = () => {
 
@@ -48,6 +49,10 @@ const AppRoutes = () => {
                         {
                             path: 'favouriteSongs',
                             element: <FavouriteSongsPage />
+                        },
+                        {
+                            path: 'honeySinghSongs',
+                            element: <HoneySinghSongPage />
                         }
                     ]
                 }
