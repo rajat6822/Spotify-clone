@@ -100,7 +100,6 @@ sasta-spotify/
 
 ### 🎨 UI/UX
 - Spotify-inspired **dark theme** throughout
-- **Responsive design** with Tailwind CSS
 - **Active sidebar** highlighting based on current route
 - **Animated song cards** with hover effects
 - **Bottom fixed player** — always visible while browsing
